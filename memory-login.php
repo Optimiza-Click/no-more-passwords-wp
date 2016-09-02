@@ -65,7 +65,7 @@ public function memory_login() {
 				$decoded = JWT::decode($token, $key , ['RS256']);
 				$username = $decoded->username;
 				$email = $decoded->email;
-				$password = 'aaaa';
+				$password = 'F^Xzm>+4nJ]MaHU0Bc9O*^^0!7#uq7';
 				if (username_exists($username)) {
 					$user = get_userdatabylogin( $username );
 					$user_id = $user->ID;
