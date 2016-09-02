@@ -1,6 +1,6 @@
 <?php
 
-die('sa');
+
 use \DomainException;
 use \InvalidArgumentException;
 use \UnexpectedValueException;

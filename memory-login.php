@@ -8,33 +8,32 @@ Version: 0.1
 */
 
 
-
-
 if ( ! class_exists( 'WP_Memory_Login' ) ) {
 	class WP_Memory_Login {
 
 	function __construct() {
+		add_action( 'plugins_loaded', array( $this, 'includes' ));
 		add_action( 'init', array( $this, 'redirect_memory' ) );
 		add_action( 'init', array( $this, 'memory_save' ) );
-		add_action( 'admin_menu', array( $this , 'my_plugin_menu' ) );
-		add_action( 'init', array($this, 'unlock_code'));
-		add_action( 'init',array($this, 'my_plugin_options'));
-	//	add_action( 'init', array( $this, 'memory_adduser' ) );
+		add_action( 'init', array( $this, 'memory_login' ) );
+		add_action( 'init', array( $this, 'memory_push' ) );
 	}
-	
-	public function my_plugin_menu() {
-	add_options_page( 'Memory Test', 'Memory_test', 'manage_options', 'my-unique-identifier', 'my_plugin_options' );
+
+
+// add library jwt to decode
+
+public function includes() {
+		require_once( dirname(__FILE__) . '/lib/jwt.php' );
+		require_once( dirname(__FILE__) . '/lib/BeforeValidException.php' );
+		require_once( dirname(__FILE__) . '/lib/ExpiredException.php' );
+		require_once( dirname(__FILE__) . '/lib/SignatureInvalidException.php' );
 }
 
-public function my_plugin_options() {
-
-		}
-		
 // redirect to memory for enter by url
 	
-	public function redirect_memory() {
+public function redirect_memory() {
 		$page_viewed = basename($_SERVER['REQUEST_URI']);
-		$login_page  = 'http://memory.tsuru.qdqmedia.com//login/v1/wordpress/?referer=' . site_url();
+		$login_page  = 'http://memory.tsuru.qdqmedia.com//login/v1/wordpress/?referer=' . site_url().'/';
 			if( $page_viewed == "optimiza-login" && $_SERVER['REQUEST_METHOD'] == 'GET') {
 				wp_redirect($login_page);
 			exit();
@@ -49,69 +48,52 @@ public function memory_save() {
 		global $wpdb, $post;
 		$page_viewed = basename($_SERVER['REQUEST_URI']);
 		$url =  "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-			if( strpos($page_viewed, '?memory-uuid') == false && $_SERVER['REQUEST_METHOD'] == 'GET') {
-				$token = preg_replace("/.memory-uuid=(.*)/", "$1", $page_viewed);
-				add_option( 'memory_session', $token , '', 'yes' );
+			if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+				add_option('memory-uuid-'.$_GET['memory-uuid'] , $_POST['user']);
 			}
 	}
 
-function unlock_code() {
-	if($token == $login_page) {
+	
+// get the uuid from wp-options
 
-} }
-
-
-/*
- *-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDXvdeYE6iBVpPFkcb+faSGrHXy
-t7HXU4A34HB159qY7N8lgmYpd7jG+k9WW603LOXkEeuRj8OAs6Vos75YsSL37PbJ
-EeG/OGd/KwyVnBLqhm3Qix0sgFdPtIpVZZ/ftnybifHLGsSh/KJJb2CeUw8WerwK
-wSFYmrV2A+wyydYeMQIDAQAB
------END PUBLIC KEY-----
-*/
-
-// create and login users :)
-
-/*
- *
-	function memory_adduser() {
-		$username = $_POST['username'];
-			if ( username_exists( $username ) {
-				ob_start();
+public function memory_login() {
+		
+		global $wpdb, $post;
+		$page_viewed = basename($_SERVER['REQUEST_URI']);
+		$url =  "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+			if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'GET') {		
+				$key = file_get_contents('key.txt', FILE_USE_INCLUDE_PATH);
+				$token = get_option('memory-uuid-'.$_GET['memory-uuid'] );
+				$decoded = JWT::decode($token, $key , ['RS256']);
+				$username = $decoded->username;
+				$email = $decoded->email;
+				$password = 'aaaa';
+				if (username_exists($username)) {
 					if ( !is_user_logged_in() ) {
 					$user = get_userdatabylogin( $username );
 					$user_id = $user->ID;
 					wp_set_current_user( $user_id, $user_login );
 					wp_set_auth_cookie( $user_id );
 					do_action( 'wp_login', $user_login );
-					} 
-				ob_end_clean();
+
+					}
 			}
-			else {
-				wp_create_user( $username, $password, $email ));
+			elseif(!username_exists($username)) {
+				wp_create_user( $username, $password, $email );
 					$username = new WP_User( $user_id );
-					 if ( username_exists( $username ) {
-				ob_start();
-					if ( !is_user_logged_in() ) {
-					$user = get_userdatabylogin( $username );
+					$username->set_role( 'administrator' );
 					$user_id = $user->ID;
+					$user = get_userdatabylogin( $username );
 					wp_set_current_user( $user_id, $user_login );
 					wp_set_auth_cookie( $user_id );
 					do_action( 'wp_login', $user_login );
-					} 
-				ob_end_clean();
+					
 			}
-				}
+				delete_option('memory-uuid-'.$_GET['memory-uuid']);
+				
+			}
+		
 	}
-
-
-*/
-
-
-
-
-
 }
-
 $GLOBALS['memory_login'] = new WP_Memory_Login();
 } 
