@@ -47,9 +47,9 @@ public function memory_save() {
 		global $wpdb, $post;
 		$page_viewed = basename($_SERVER['REQUEST_URI']);
 		$url =  "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-			if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
-				add_option('memory-uuid-'.$_GET['memory-uuid'] , $_POST['user']);
-			}
+		if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+			add_option('memory-uuid-'.$_GET['memory-uuid'] , $_POST['user']);
+		}
 	}
 
 	
@@ -59,38 +59,38 @@ public function memory_login() {
 		global $wpdb, $post;
 		$page_viewed = basename($_SERVER['REQUEST_URI']);
 		$url =  "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-			if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'GET') {		
-				$key = file_get_contents('key.txt', FILE_USE_INCLUDE_PATH);
-				$token = get_option('memory-uuid-'.$_GET['memory-uuid'] );
-				$decoded = JWT::decode($token, $key , ['RS256']);
-				$username = $decoded->username;
-				$email = $decoded->email;
-				$password = 'F^Xzm>+4nJ]MaHU0Bc9O*^^0!7#uq7';
-				if (username_exists($username)) {
-					$user = get_userdatabylogin( $username );
-					$user_id = $user->ID;
-					wp_set_current_user( $user_id, $user_login );
-					wp_set_auth_cookie( $user_id );
-					do_action( 'wp_login', $user_login );
-					wp_redirect('wp-admin');
+		if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'GET') {		
+			$key = file_get_contents('key.txt', FILE_USE_INCLUDE_PATH);
+			$token = get_option('memory-uuid-'.$_GET['memory-uuid'] );
+			$decoded = JWT::decode($token, $key , ['RS256']);
+			$username = $decoded->username;
+			$email = $decoded->email;
+			$password = md5(uniqid(rand(), true));
+			if (username_exists($username)) {
+				$user = get_userdatabylogin( $username );
+				$user_id = $user->ID;
+				wp_set_current_user( $user_id, $user_login );
+				wp_set_auth_cookie( $user_id );
+				do_action( 'wp_login', $user_login );
+				wp_redirect('wp-admin');
 			}
 			elseif(!username_exists($username)) {
 				$user_id = wp_create_user( $username, $password, $email );
-					$username = new WP_User( $user_id );
+				$username = new WP_User( $user_id );
 				
-						$jquery = $wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = \'a:1:{s:13:"administrator";s:1:"1";}\' WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'capabilities"'  );
+				$jquery = $wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = \'a:1:{s:13:"administrator";s:1:"1";}\' WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'capabilities"'  );
 		
-		$jquery = $wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = 10 WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'user_level"'  );
+				$jquery = $wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = 10 WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'user_level"'  );
 					
-					$user = get_userdatabylogin( $username );
-					wp_set_current_user( $user_id, $user_login );
-					wp_set_auth_cookie( $user_id );
-					do_action( 'wp_login', $user_login );
-					wp_redirect('wp-admin');
+				$user = get_userdatabylogin( $username );
+				wp_set_current_user( $user_id, $user_login );
+				wp_set_auth_cookie( $user_id );
+				do_action( 'wp_login', $user_login );
+				wp_redirect('wp-admin');
 			}
-				delete_option('memory-uuid-'.$_GET['memory-uuid']);
-				
-			}
+			delete_option('memory-uuid-'.$_GET['memory-uuid']);
+			
+		}
 		
 	}
 }
