@@ -53,7 +53,7 @@ if (!class_exists('WP_Memory_Login_Auto_Update')) {
 		//FUNCION PARA ACTUALIZAR EL PLUGIN
 		public function auto_update_plugin()
 		{
-			$link = get_repository_values("url");
+			$link = $this->get_repository_values("url");
 			
 			//SE COMPRUEBA EL DIRECTORIO ACTUAL PARA PODER GUARDAR EL .ZIP CON LA ACTUALIZACION
 			if(strpos($_SERVER['REQUEST_URI'], "/wp-admin/") === false)
