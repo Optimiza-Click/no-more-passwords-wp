@@ -47,7 +47,8 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 		{
 			if( basename($_SERVER['REQUEST_URI']) == $this->url_version) 
 			{
-				echo $this->get_version_plugin();		
+				echo $this->get_version_plugin();	
+				
 				exit();
 			}
 		}
