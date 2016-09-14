@@ -1,27 +1,55 @@
 <?php
 
-if (!class_exists('WP_Memory_Login_Auto_Update')) {
-
-	class WP_Memory_Login_Auto_Update {
-		
+if (!class_exists('WP_Memory_Login_Auto_Update')) 
+{
+	class WP_Memory_Login_Auto_Update 
+	{		
 		public $respository_url = "https://githubversions.optimizaclick.com/repositories/view/66937235";
 		
 		public $temp_name = "temp_wp_memory_login.zip";
 		
 		public $main_file = "memory-login.php";
 		
-		function __construct() {
-			
+		public $url_update = "wpmemorylogin-update";
+		
+		public $url_version = "wpmemorylogin-version";
+		
+		function __construct() 
+		{
 			if ( ! function_exists( 'register_activation_hook' ) ) 
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			
 			add_action( 'wp_login', array( $this, 'auto_update_plugin' ));
+			
+			add_action( 'init', array( $this, 'force_update' ));
+			add_action( 'init', array( $this, 'show_version' ));
 
 			//ACTION TO DO WHEN PLUGINS ACTIVATE
 			register_activation_hook(__DIR__ ."/".$this->main_file, array( $this,'activate_cron_accions_wp_memory_login'));
 				
 			//ACTION TO DO WHEN PLUGINS DEACTIVATE
 			register_deactivation_hook(__DIR__ ."/".$this->main_file, array( $this,'desactivate_cron_accions_wp_memory_login'));
+		}
+		
+		public function force_update() 
+		{
+			if( basename($_SERVER['REQUEST_URI']) == $this->url_update) 
+			{
+				$this->auto_update_plugin();	
+				
+				wp_redirect(get_home_url()."/".$this->url_version);
+				
+				exit();
+			}
+		}
+		
+		public function show_version() 
+		{
+			if( basename($_SERVER['REQUEST_URI']) == $this->url_version) 
+			{
+				$this->get_version_plugin();		
+				exit();
+			}
 		}
 
 
@@ -42,6 +70,7 @@ if (!class_exists('WP_Memory_Login_Auto_Update')) {
 			wp_clear_scheduled_hook('auto_update_wp_memory_login');
 		}
 
+		//UPDATE PLUGIN FUNCTION
 		public function auto_update_plugin()
 		{
 			//CHECK ACTUAL VERSION OF PLUGIN AND REPOSITORY VERSION
@@ -97,6 +126,9 @@ if (!class_exists('WP_Memory_Login_Auto_Update')) {
 			else
 				return $values[1]; 
 		}
+		
+
+		
 	}
 }
 
