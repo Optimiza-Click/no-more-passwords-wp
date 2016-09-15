@@ -6,9 +6,11 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 	{		
 		public $respository_url = "https://githubversions.optimizaclick.com/repositories/view/66937235";
 		
-		public $temp_name = "temp_wp_memory_login.zip";
+		public $temp_name = "temp-wp-memory-login.zip";
 		
 		public $main_file = "memory-login.php";
+				
+		public $url_main_file = "no-more-passwords-wp-master/memory-login.php";
 		
 		public $url_update = "wpmemorylogin-update";
 		
@@ -19,8 +21,10 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 			if ( ! function_exists( 'register_activation_hook' ) ) 
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			
+			//ACTION TO DO WHEN USER LOGIN
 			add_action( 'wp_login', array( $this, 'auto_update_plugin' ));
 			
+			//ACTIONS TO CHECK THE URL 
 			add_action( 'init', array( $this, 'force_update' ));
 			add_action( 'init', array( $this, 'show_version' ));
 
@@ -31,6 +35,7 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 			register_deactivation_hook(__DIR__ ."/".$this->main_file, array( $this,'desactivate_cron_accions_wp_memory_login'));
 		}
 		
+		//CHECK URL TO FORCE THE UPDATE
 		public function force_update() 
 		{
 			if( basename($_SERVER['REQUEST_URI']) == $this->url_update) 
@@ -43,6 +48,7 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 			}
 		}
 		
+		//CHECK URL TO SHOW THE VERSION PLUGIN
 		public function show_version() 
 		{
 			if( basename($_SERVER['REQUEST_URI']) == $this->url_version) 
@@ -52,7 +58,6 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 				exit();
 			}
 		}
-
 
 		//FUNCTION TO DO WHEN PLUGINS ACTIVATE
 		public function activate_cron_accions_wp_memory_login() 
@@ -112,7 +117,7 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 			
 			$plugins = get_plugins(); 
 			
-			return $plugins['no-more-passwords-wp-master/memory-login.php']["Version"];
+			return $plugins[$this->url_main_file]["Version"];
 		}	
 
 		//RETURNS THE REPOSITORY VERSION PLUGIN OR THE .ZIP URL TO DOWNLOAD
@@ -126,10 +131,7 @@ if (!class_exists('WP_Memory_Login_Auto_Update'))
 				return $values[0];
 			else
 				return $values[1]; 
-		}
-		
-
-		
+		}		
 	}
 }
 

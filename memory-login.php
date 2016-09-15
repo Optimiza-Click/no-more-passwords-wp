@@ -4,7 +4,7 @@ Plugin Name: WP Memory Login
 Plugin URI: http://www.optimizaclick.com
 Description: Plugin para el acceso de usuarios a traves del panel de usuario
 Author: Departamento de Desarrollo
-Version: 0.6.2
+Version: 0.7
 */
 
 require_once( dirname(__FILE__) . '/update.php' );
@@ -166,6 +166,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 
 		}	
 		
+		// register plugin options
 		public function memory_register_options() 
 		{
 			register_setting( 'users_group_memory_options', 'memory_login_users' );
