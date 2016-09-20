@@ -69,7 +69,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'GET') {		
 				$key = file_get_contents('key.txt', FILE_USE_INCLUDE_PATH);
 				$token = get_option('memory-uuid-'.$_GET['memory-uuid'] );
-				$decoded = JWT::decode($token, $key , ['RS256']);
+				$decoded = JWT::decode($token, $key , array('RS256'));
 				
 				if(in_array($decoded->username, explode(";", get_option("memory_login_users"))) ||
 				count(array_intersect(get_option("memory_login_group_users"), $decoded->project_permissions)) > 0)
