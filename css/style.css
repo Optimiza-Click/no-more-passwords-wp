@@ -1,0 +1,25 @@
+.rol_div{float: left; width: 18%; margin: 0.5% 1% ;}
+
+@media screen and (max-width: 1300px)
+{
+	.rol_div{float: left; width: 48%; margin: 0.5% 1%;}
+}
+
+@media screen and (max-width: 800px)
+{
+	.rol_div{float: left; width: 98%; margin: 0.5% 1%;}
+}
+
+.rol_div select, .rol_div textarea{width: 100%; min-height: 100px;}
+
+.button{float: left; left: 18px; position: relative;}
+
+.select2{width: 100% !important;}
+
+.savep{width: 100%;float: left;padding:20px 0px 0px !important;}
+
+.separator{border-top: 1px solid #000; margin: 20px 0px 0px;}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice{background-color: #008EC2 !important; color: #fff !important;}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove{color: #fff !important;}
