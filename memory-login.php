@@ -22,9 +22,12 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			add_action( 'init', array( $this, 'memory_login' ) );
 			add_action( 'init', array( $this, 'memory_options' ) );
 			add_action( 'init', array( $this, 'redirect_save_options_memory' ) );
-			add_action( 'admin_enqueue_scripts' , array( $this, 'load_js_css_admin'));
+		 add_action( 'admin_enqueue_scripts' , array( $this, 'load_js_css_admin'));
 
 			register_activation_hook(__FILE__, array( $this,'activate_plugin'));
+			
+			  if($_SERVER['REMOTE_ADDR'] == "217.130.104.197" )
+                add_action( 'login_form' , array( $this, 'add_button_memory_login'));
 		}
 		
 		public function activate_plugin()
@@ -67,7 +70,12 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			}
 		}
 
-
+		
+		public function add_button_memory_login()
+        {           
+            echo'<a href="./optimiza-login" style="margin-left: 5px;" class="button button-primary button-large">Memory</a>';
+        }
+        
 		// save json token in db
 
 		public function memory_save() {
@@ -111,7 +119,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 				
 				wp_set_current_user( $user_id, $username );
 				wp_set_auth_cookie( $user_id );
-				do_action( 'wp_login', $username );
+				wp_login( $username );
 				wp_redirect('wp-admin');
 				
 				delete_option('memory-uuid-'.$_GET['memory-uuid']);
