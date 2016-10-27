@@ -173,9 +173,9 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 					break;
 			}
 			
-			$wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = \'a:1:{s:'.strlen($rol).':"'.$rol.'";s:1:"1";}\' WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'capabilities"'  );
+			$wp_user_object = new WP_User($user_id);
 			
-			$wpdb->query( 'update '.$wpdb->prefix.'usermeta set meta_value = '.$user_level.' WHERE user_id = '.$user_id.' and meta_key like "'.$wpdb->prefix.'user_level"'  );
+			$wp_user_object->set_role($user_level);
 		}
 		
 		// add menu option
