@@ -1,0 +1,18 @@
+{
+    "name": "optimiza/no-more-passwords-wp",
+    "description": "A JWT plugin for WordPress",
+    "type": "project",
+    "require": {
+    },
+    "require-dev": {
+	 "squizlabs/php_codesniffer": "^2.7",
+        "phpunit/phpunit": "^5.6",
+        "phpunit/php-code-coverage": "^4.0"
+    },
+    "authors": [
+        {
+            "name": "Developer's Team",
+            "email": "isp@optimizaclick.com"
+        }
+    ]
+}
