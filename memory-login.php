@@ -175,7 +175,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			
 			$wp_user_object = new WP_User($user_id);
 			
-			$wp_user_object->set_role($user_level);
+			$wp_user_object->set_role($rol);
 		}
 		
 		// add menu option
