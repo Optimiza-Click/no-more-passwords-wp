@@ -24,22 +24,22 @@
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove{color: #fff !important;}
 
-						.banner {
-						    padding: 5px;
-							background:#0ab0d8;
-							width:100%;
-						}
-						.banner img {
-							margin:0 auto;
-							vertical-align: middle;
-						}
-						.banner a {
-							background:white;
-							padding: 15px 20px;
-							float:right;
-							margin: 8px 15px 10px 0px;
-							text-decoration: none;
-							color: #0ab0d8;
-							font-weight: 900;
-							margin-left:25px;
-						}
+.banner {
+	padding: 5px;
+	background:#0ab0d8;
+	width:100%;
+}
+.banner img {
+	margin:0 auto;
+	vertical-align: middle;
+}
+.banner a {
+	background:white;
+	padding: 15px 20px;
+	float:right;
+	margin: 8px 15px 10px 0px;
+	text-decoration: none;
+	color: #0ab0d8;
+	font-weight: 900;
+	margin-left:25px;
+}
