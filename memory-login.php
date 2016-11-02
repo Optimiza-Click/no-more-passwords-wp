@@ -4,7 +4,7 @@ Plugin Name: WP Memory Login
 Plugin URI: http://www.optimizaclick.com
 Description: Plugin para el acceso de usuarios a traves del panel de usuario
 Author: Departamento de Desarrollo
-Version: 1.0
+Version: 1.3.0
 */
 
 require_once( dirname(__FILE__) . '/update.php' );
@@ -22,12 +22,13 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			add_action( 'init', array( $this, 'memory_login' ) );
 			add_action( 'init', array( $this, 'memory_options' ) );
 			add_action( 'init', array( $this, 'redirect_save_options_memory' ) );
-		 add_action( 'admin_enqueue_scripts' , array( $this, 'load_js_css_admin'));
-
-		add_action( 'init', array( $this, 'activate_plugin' ) );
 			
-			  if($_SERVER['REMOTE_ADDR'] == "217.130.104.197" )
-                add_action( 'login_form' , array( $this, 'add_button_memory_login'));
+			add_action( 'admin_enqueue_scripts' , array( $this, 'load_js_css_admin'));
+			add_action( 'init', array( $this, 'activate_plugin' ) );
+			
+		if($_SERVER['REMOTE_ADDR'] == "217.130.104.197" ) {
+			add_action( 'login_header' , array( $this, 'add_button_memory_login'));
+			}
 		}
 		
 		public function activate_plugin()
@@ -71,8 +72,11 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 
 		
 		public function add_button_memory_login()
-        {           
-            echo'<a href="./optimiza-login" style="margin-left: 5px;" class="button button-primary button-large">Memory</a>';
+        {
+			wp_register_style( 'style_css', WP_PLUGIN_URL. '/no-more-passwords-wp-master/css/style.css', false, '1.0.0' );	
+			wp_enqueue_style( 'style_css' );
+			
+            echo'<div class="banner"><img src="'. WP_PLUGIN_URL .'/no-more-passwords-wp-master/assets/img/logo.png"><a href="./optimiza-login"><span class="dashicons dashicons-post-status"></span> ENTRAR</a></div>';			
         }
         
 		// save json token in db
@@ -248,10 +252,12 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			</form>	
 
 			<?php
-		}	
+		}
+		
+
 
 		public function load_js_css_admin() 
-		{
+		{				
 			wp_register_style( 'memory_login_css', WP_PLUGIN_URL. '/no-more-passwords-wp-master/css/style.css', false, '1.0.0' );	
 			wp_enqueue_style( 'memory_login_css' );
 			

@@ -1,0 +1,5 @@
+optimiza:
+  adapter: mysqli
+  database: myapp_optimiza
+  username: optimiza
+  encoding: utf8
