@@ -153,7 +153,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 				
 				case "administrator":
 				
-					$user_level = 10;
+					$user_level = 7;
 					
 					break;
 					
