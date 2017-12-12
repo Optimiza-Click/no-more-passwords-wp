@@ -105,6 +105,7 @@ if ( ! class_exists( 'WP_Memory_Login' ) ) {
 			if( isset($_GET['memory-uuid']) && $_SERVER['REQUEST_METHOD'] == 'GET') {		
 				$key = file_get_contents('key.txt', FILE_USE_INCLUDE_PATH);
 				$token = get_option('memory-uuid-'.$_GET['memory-uuid'] );
+				delete_option('memory-uuid-' . $_GET['memory-uuid']);
 				$decoded = JWT::decode($token, $key , array('RS256'));
 									
 				$username = $decoded->username;
